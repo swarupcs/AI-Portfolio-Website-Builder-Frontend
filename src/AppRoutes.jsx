@@ -5,6 +5,8 @@ import LoginPage from "./Pages/LoginPAge";
 import SignUpPage from "./Pages/SignupPage";
 import CheckEmailPage from "./Pages/CheckEmail";
 import DashboardPage from "./Pages/DashboardPage";
+import BuilderPage from "./Pages/BuilderPage";
+import BuilderProjectPage from "./Pages/BuilderProjectPage";
 
 
 function AppRoutes() {
@@ -51,22 +53,22 @@ function AppRoutes() {
           // </ProtectedRoute>
         }
       />
-        {/* <Route
+        <Route
         path='/builder'
         element={
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <BuilderPage />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         }
-      /> */}
-        {/* <Route
+      />
+        <Route
         path='/builder/:projectId'
         element={
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <BuilderProjectPage />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         }
-      /> */}
+      />
 
         {/* Catch all route - redirect to home */}
         {/* <Route path='*' element={<Navigate to='/' replace />} /> */}
