@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./Pages/LoginPAge";
 import SignUpPage from "./Pages/SignupPage";
 import CheckEmailPage from "./Pages/CheckEmail";
+import DashboardPage from "./Pages/DashboardPage";
 
 
 function AppRoutes() {
@@ -40,17 +41,16 @@ function AppRoutes() {
           }
         />
 
-        {/* <Route path='/auth/check-email' element={<CheckEmailPage />} /> */}
 
         {/* Protected routes */}
-        {/* <Route
+        <Route
         path='/dashboard'
         element={
-          <ProtectedRoute>
+          // <ProtectedRoute>
             <DashboardPage />
-          </ProtectedRoute>
+          // </ProtectedRoute>
         }
-      /> */}
+      />
         {/* <Route
         path='/builder'
         element={
