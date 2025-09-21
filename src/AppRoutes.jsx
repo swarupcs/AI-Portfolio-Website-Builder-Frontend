@@ -1,6 +1,7 @@
 
 import HomePage from "./Pages/HomePage";
 import { Route, Routes } from "react-router-dom";
+import LoginPage from "./Pages/LoginPAge";
 
 
 function AppRoutes() {
@@ -11,22 +12,22 @@ function AppRoutes() {
         <Route path='/' element={<HomePage />} />
 
         {/* Auth routes - redirect to dashboard if already authenticated */}
-        {/* <Route
-        path='/auth/login'
+        <Route
+        path='/login'
         element={
-          <PublicRoute>
+          // <PublicRoute>
             <LoginPage />
-          </PublicRoute>
+          // </PublicRoute>
         }
-      /> */}
-        {/* <Route
-        path='/auth/signup'
+      />
+        <Route
+        path='/signup'
         element={
-          <PublicRoute>
+          // <PublicRoute>
             <SignupPage />
-          </PublicRoute>
+          // </PublicRoute>
         }
-      /> */}
+      />
         {/* <Route path='/auth/check-email' element={<CheckEmailPage />} /> */}
 
         {/* Protected routes */}

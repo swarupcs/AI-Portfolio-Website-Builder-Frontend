@@ -33,10 +33,10 @@ export default function HomePage() {
             </span>
           </div>
           <div className='flex items-center gap-4'>
-            <Link to='/auth/login'>
+            <Link to='/login'>
               <Button variant='ghost'>Sign In</Button>
             </Link>
-            <Link to='/auth/signup'>
+            <Link to='/signup'>
               <AnimatedButton glow>Get Started</AnimatedButton>
             </Link>
           </div>
@@ -60,7 +60,7 @@ export default function HomePage() {
           </div>
 
           <div className='flex flex-col sm:flex-row gap-4 justify-center items-center'>
-            <Link to='/auth/signup'>
+            <Link to='/signup'>
               <AnimatedButton size='lg' glow className='text-lg px-8 py-6'>
                 Start Building <ArrowRight className='ml-2 w-5 h-5' />
               </AnimatedButton>
