@@ -2,6 +2,7 @@
 import HomePage from "./Pages/HomePage";
 import { Route, Routes } from "react-router-dom";
 import LoginPage from "./Pages/LoginPAge";
+import SignUpPage from "./Pages/SignupPage";
 
 
 function AppRoutes() {
@@ -24,7 +25,7 @@ function AppRoutes() {
         path='/signup'
         element={
           // <PublicRoute>
-            <SignupPage />
+            <SignUpPage />
           // </PublicRoute>
         }
       />

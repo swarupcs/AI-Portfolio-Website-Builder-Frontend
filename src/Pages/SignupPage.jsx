@@ -3,33 +3,38 @@ import { Button } from "@/components/ui/button"
 import { GlassCard } from "@/components/ui/glass-card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+
 import { useState } from "react"
 import { Sparkles, ArrowRight } from "lucide-react"
 import { Link, useNavigate } from "react-router-dom"
 
-/**
- * LoginPage component.
- *
- * This component renders a login form and handles the authentication process
- * using Supabase.
- *
- * @returns {JSX.Element} A JSX element representing the LoginPage component.
- */
-export default function LoginPage() {
+export default function SignUpPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [fullName, setFullName] = useState("")
   const [error, setError] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSignUp = async (e) => {
     e.preventDefault()
+
     setIsLoading(true)
     setError(null)
 
     try {
-     
-      navigate('/dashboard');
+    //   const { error } = await supabase.auth.signUp({
+    //     email,
+    //     password,
+    //     options: {
+    //       emailRedirectTo: process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL || `${window.location.origin}/dashboard`,
+    //       data: {
+    //         full_name: fullName,
+    //       },
+    //     },
+    //   })
+      if (error) throw error
+    //   router.push("/auth/check-email")
     } catch (error) {
       setError(error instanceof Error ? error.message : "An error occurred")
     } finally {
@@ -53,11 +58,26 @@ export default function LoginPage() {
               Portfolio AI
             </h1>
           </div>
-          <p className="text-slate-400">Sign in to your account</p>
+          <p className="text-slate-400">Create your account</p>
         </div>
 
         <GlassCard className="p-8">
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleSignUp} className="space-y-6">
+            <div className="space-y-2">
+              <Label htmlFor="fullName" className="text-slate-200">
+                Full Name
+              </Label>
+              <Input
+                id="fullName"
+                type="text"
+                placeholder="Enter your full name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                required
+                className="bg-slate-800/50 border-slate-700 text-white placeholder:text-slate-400"
+              />
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="email" className="text-slate-200">
                 Email
@@ -80,7 +100,7 @@ export default function LoginPage() {
               <Input
                 id="password"
                 type="password"
-                placeholder="Enter your password"
+                placeholder="Create a password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
@@ -100,10 +120,10 @@ export default function LoginPage() {
               className="w-full bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white font-medium py-3 rounded-xl transition-all duration-200 flex items-center justify-center gap-2"
             >
               {isLoading ? (
-                "Signing in..."
+                "Creating account..."
               ) : (
                 <>
-                  Sign In
+                  Create Account
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -112,9 +132,9 @@ export default function LoginPage() {
 
           <div className="mt-6 text-center">
             <p className="text-slate-400 text-sm">
-              Don't have an account?{" "}
-              <Link to="/signup" className="text-cyan-400 hover:text-cyan-300 font-medium transition-colors">
-                Sign up
+              Already have an account?{" "}
+              <Link to="/login" className="text-cyan-400 hover:text-cyan-300 font-medium transition-colors">
+                Sign in
               </Link>
             </p>
           </div>
