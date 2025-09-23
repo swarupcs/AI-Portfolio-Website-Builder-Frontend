@@ -3,7 +3,8 @@ import { ProjectsGrid } from "@/components/Dashboard/ProjectGrid";
 import { ProjectTemplates } from "@/components/Dashboard/ProjectTemplates";
 import { RecentActivity } from "@/components/Dashboard/RecentActivity";
 import { StatsCards } from "@/components/Dashboard/StatsCards";
-
+import { selectIsAuthenticated, selectUser } from "@/features/auth/authSlice";
+import { useSelector } from 'react-redux';
 
 // Mock user data
 const mockUser = {
@@ -149,6 +150,11 @@ export default function DashboardPage() {
   // Simulate loading state - in a real app, you might want to add this
   // const [isLoading, setIsLoading] = useState(true);
 
+  const user = useSelector(selectUser);
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+
+  console.log('user', user);
+
   // Mock function to handle project creation
   const handleProjectCreated = () => {
     // In a real app, this would refetch data or update state
@@ -157,6 +163,15 @@ export default function DashboardPage() {
   };
 
   const hasProjects = mockProjects && mockProjects.length > 0;
+
+  // Show loading or redirect if not authenticated
+  if (!isAuthenticated || !user) {
+    return (
+      <div className='min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center'>
+        <div className='text-white'>Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900'>
@@ -168,7 +183,7 @@ export default function DashboardPage() {
       </div>
 
       <div className='relative z-10'>
-        <DashboardHeader user={mockUser} profile={mockProfile} />
+        <DashboardHeader user={user} profile={mockProfile} />
 
         <main className='max-w-7xl mx-auto px-6 py-8'>
           <div className='space-y-8'>
@@ -176,7 +191,7 @@ export default function DashboardPage() {
 
             {!hasProjects ? (
               <ProjectTemplates
-                userId={mockUser.id}
+                userId={user._id}
                 onProjectCreated={handleProjectCreated}
               />
             ) : (
