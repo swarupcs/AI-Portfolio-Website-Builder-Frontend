@@ -1,7 +1,8 @@
 import { Provider } from 'react-redux';
 import './App.css'
-import { store } from './app/store';
+import { persistor, store } from './app/store';
 import AppRoutes from './AppRoutes'
+import { PersistGate } from 'redux-persist/integration/react';
 // Protected Route component
 function ProtectedRoute({ children }) {
 
@@ -17,7 +18,9 @@ function App() {
   return (
     <>
       <Provider store={store}>
-        <AppRoutes />
+        <PersistGate loading={null} persistor={persistor}>
+          <AppRoutes />
+        </PersistGate>
       </Provider>
     </>
   );
