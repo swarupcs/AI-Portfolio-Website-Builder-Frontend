@@ -28,7 +28,6 @@ export const authService = {
     }
   },
 
-
   signin: async (credentials) => {
     try {
       const response = await axiosInstance.post('/auth/signin', credentials);
@@ -47,6 +46,31 @@ export const authService = {
       });
 
       // Re-throw with enhanced error info
+      throw {
+        ...error,
+        message: errorMessage,
+        status: error.response?.status,
+      };
+    }
+  },
+
+  signout: async () => {
+    try {
+      const response = await axiosInstance.post('/auth/signout');
+      return response.data;
+    } catch (error) {
+      const errorMessage =
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        error.message ||
+        'Signout failed';
+
+      console.error('Signout API Error:', {
+        status: error.response?.status,
+        message: errorMessage,
+        data: error.response?.data,
+      });
+
       throw {
         ...error,
         message: errorMessage,
