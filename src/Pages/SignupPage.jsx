@@ -56,6 +56,8 @@ export default function SignUpPage() {
       return;
     }
 
+    localStorage.clear();
+
     // Trigger the signup mutation
     signupMutation.mutate(formData);
   };

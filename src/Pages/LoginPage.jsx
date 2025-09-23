@@ -49,6 +49,8 @@ export default function LoginPage() {
       return;
     }
 
+    localStorage.clear();
+
     // Trigger the signin mutation
     signinMutation.mutate(formData);
   };
