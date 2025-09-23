@@ -43,6 +43,10 @@ export function DashboardHeader({ user, profile }) {
       .toUpperCase();
   };
 
+    const getFullName = (firstName, lastName) => {
+      return `${firstName || ''} ${lastName || ''}`.trim() || 'User';
+    };
+
   return (
     <header className='border-b border-slate-800/50 backdrop-blur-sm'>
       <div className='max-w-7xl mx-auto px-6 py-4'>
@@ -80,14 +84,14 @@ export function DashboardHeader({ user, profile }) {
                 >
                   <Avatar className='h-10 w-10 border-2 border-cyan-400/20'>
                     <AvatarImage
-                      src={profile?.avatar_url || '/placeholder.svg'}
-                      alt={profile?.full_name || user?.email || 'User'}
+                      src={user?.photoUrl || '/placeholder.svg'}
+                      alt={getFullName(user?.firstName, user?.lastName)}
                     />
                     <AvatarFallback className='bg-slate-800 text-cyan-400'>
-                      {profile?.full_name
-                        ? getInitials(profile.full_name)
-                        : user?.email
-                        ? user.email[0].toUpperCase()
+                      {user?.firstName || user?.lastName
+                        ? getInitials(user.firstName, user.lastName)
+                        : user?.emailId
+                        ? user.emailId[0].toUpperCase()
                         : 'U'}
                     </AvatarFallback>
                   </Avatar>
@@ -100,10 +104,10 @@ export function DashboardHeader({ user, profile }) {
                 <div className='flex items-center justify-start gap-2 p-2'>
                   <div className='flex flex-col space-y-1 leading-none'>
                     <p className='font-medium text-white'>
-                      {profile?.full_name || 'User'}
+                      {getFullName(user?.firstName, user?.lastName)}
                     </p>
                     <p className='w-[200px] truncate text-sm text-slate-400'>
-                      {user?.email || 'user@example.com'}
+                      {user?.emailId || 'user@example.com'}
                     </p>
                   </div>
                 </div>
