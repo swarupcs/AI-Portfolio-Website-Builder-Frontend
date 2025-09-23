@@ -47,3 +47,24 @@ export const useSignin = () => {
     },
   });
 };
+
+
+export const useSignout = () => {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: authService.signout,
+    onSuccess: () => {
+      toast.success('Signed out successfully!');
+      // Clear user data and token
+      queryClient.setQueryData(['user'], null);
+      localStorage.clear();
+      navigate('/login');
+    },
+    onError: (error) => {
+      const message = error.message || 'Signout failed. Please try again.';
+      toast.error(message);
+    },
+  });
+};
