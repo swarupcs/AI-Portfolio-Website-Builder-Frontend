@@ -2,16 +2,20 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { authService } from '../../apis/auth/authService';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { clearUser, setUser } from '@/features/auth/authSlice';
 
 export const useSignup = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return useMutation({
     mutationFn: authService.signup,
     onSuccess: (data) => {
       toast.success('Account created successfully!');
       queryClient.setQueryData(['user'], data.data?.user);
+      dispatch(setUser(data.data?.user));
       navigate('/dashboard');
     },
     onError: (error) => {
@@ -25,11 +29,13 @@ export const useSignup = () => {
 export const useSignin = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return useMutation({
     mutationFn: authService.signin,
     onSuccess: (data) => {
       toast.success('Signed in successfully!');
+      console.log("data", data);
       // Store user data and token if needed
       queryClient.setQueryData(['user'], data.data?.user);
 
@@ -37,6 +43,8 @@ export const useSignin = () => {
     //   if (data.data?.token) {
     //     localStorage.setItem('authToken', data.data.token);
     //   }
+
+    dispatch(setUser(data.data?.user));
 
       navigate('/dashboard');
     },
@@ -52,6 +60,7 @@ export const useSignin = () => {
 export const useSignout = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+   const dispatch = useDispatch();
 
   return useMutation({
     mutationFn: authService.signout,
@@ -60,6 +69,7 @@ export const useSignout = () => {
       // Clear user data and token
       queryClient.setQueryData(['user'], null);
       localStorage.clear();
+      dispatch(clearUser());
       navigate('/login');
     },
     onError: (error) => {
