@@ -7,22 +7,24 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sparkles, Plus, Settings, LogOut, User } from 'lucide-react';
+import { Sparkles, Plus, Settings, LogOut, User, Loader2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useSignout } from '@/hooks/auth/useAuth';
 
 export function DashboardHeader({ user, profile }) {
   const navigate = useNavigate();
 
-  const handleSignOut = async () => {
-    // Mock sign out - in a real app this would clear auth tokens/session
-    console.log('Signing out user...');
+  // Get signout mutation with all states
+  const signoutMutation = useSignout();
+  const {
+    isPending: isSigningOut,
+    isError: signoutError,
+    error,
+  } = signoutMutation;
 
-    // Clear any stored auth data (localStorage, sessionStorage, etc.)
-    // localStorage.removeItem('authToken');
-    // sessionStorage.clear();
-
-    // Navigate to home/login page
-    navigate('/');
+  const handleSignOut = () => {
+    // Trigger the signout mutation
+    signoutMutation.mutate();
   };
 
   const handleProfileClick = () => {
@@ -53,9 +55,17 @@ export function DashboardHeader({ user, profile }) {
           </div>
 
           <div className='flex items-center gap-4'>
+            {/* Show error message if signout fails */}
+            {signoutError && error && (
+              <div className='text-red-400 text-sm bg-red-500/10 px-3 py-1 rounded-md border border-red-500/20'>
+                {error.message}
+              </div>
+            )}
+
             <Button
               onClick={() => navigate('/builder')}
-              className='bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white font-medium rounded-xl transition-all duration-200 flex items-center gap-2'
+              disabled={isSigningOut} // Disable during signout
+              className='bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white font-medium rounded-xl transition-all duration-200 flex items-center gap-2 disabled:opacity-50'
             >
               <Plus className='w-4 h-4' />
               New Project
@@ -65,7 +75,8 @@ export function DashboardHeader({ user, profile }) {
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='ghost'
-                  className='relative h-10 w-10 rounded-full'
+                  className='relative h-10 w-10 rounded-full disabled:opacity-50'
+                  disabled={isSigningOut} // Disable during signout
                 >
                   <Avatar className='h-10 w-10 border-2 border-cyan-400/20'>
                     <AvatarImage
@@ -98,26 +109,38 @@ export function DashboardHeader({ user, profile }) {
                 </div>
                 <DropdownMenuSeparator className='bg-slate-700' />
                 <DropdownMenuItem
-                  className='text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer'
+                  className='text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer disabled:opacity-50'
                   onClick={handleProfileClick}
+                  disabled={isSigningOut}
                 >
                   <User className='mr-2 h-4 w-4' />
                   Profile
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  className='text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer'
+                  className='text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer disabled:opacity-50'
                   onClick={handleSettingsClick}
+                  disabled={isSigningOut}
                 >
                   <Settings className='mr-2 h-4 w-4' />
                   Settings
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className='bg-slate-700' />
                 <DropdownMenuItem
-                  className='text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer'
+                  className='text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer disabled:opacity-50'
                   onClick={handleSignOut}
+                  disabled={isSigningOut}
                 >
-                  <LogOut className='mr-2 h-4 w-4' />
-                  Sign out
+                  {isSigningOut ? (
+                    <>
+                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
+                      Signing out...
+                    </>
+                  ) : (
+                    <>
+                      <LogOut className='mr-2 h-4 w-4' />
+                      Sign out
+                    </>
+                  )}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
