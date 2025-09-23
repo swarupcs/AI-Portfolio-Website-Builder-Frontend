@@ -4,6 +4,7 @@ import { persistor, store } from './app/store';
 import AppRoutes from './AppRoutes'
 import { PersistGate } from 'redux-persist/integration/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'sonner';
 // Protected Route component
 function ProtectedRoute({ children }) {
 
@@ -23,6 +24,7 @@ function App() {
         <PersistGate loading={null} persistor={persistor}>
           <QueryClientProvider client={queryClient}>
             <AppRoutes />
+            <Toaster position='top-center' richColors />
           </QueryClientProvider>
         </PersistGate>
       </Provider>
