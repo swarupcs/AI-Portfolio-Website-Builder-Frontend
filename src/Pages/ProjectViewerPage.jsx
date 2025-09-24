@@ -79,7 +79,7 @@ function MonacoEditor({
 }
 
 export function ProjectViewerPage({ project, onBack }) {
-  const [activeTab, setActiveTab] = useState<"preview" | "code">("preview")
+  const [activeTab, setActiveTab] = useState("preview")
   const [activeFile, setActiveFile] = useState(() => {
     if (project.framework === "nextjs" && project.files) {
       return Object.keys(project.files)[0] || "app/page.tsx"
