@@ -19,8 +19,29 @@ import {
   CreditCard,
   HelpCircle,
 } from 'lucide-react';
+import { useSignout } from '@/hooks/auth/useAuth';
 
-export function DashboardHeader() {
+export function DashboardHeader({ userData }) {
+
+  const { firstName, lastName, emailId, photoUrl } = userData || {};
+
+  const fullName = `${firstName || ''} ${lastName || ''}`.trim();
+  const initials = fullName
+    .split(' ')
+    .map((name) => name.charAt(0).toUpperCase())
+    .join('')
+    .slice(0, 2);
+
+    const { mutate: signout, isLoading, isError, error, data } = useSignout();
+
+
+
+  function handleLogout() {
+    // Implement logout functionality here
+    // console.log('Logging out...');
+
+    signout(); 
+  }
   return (
     <header className='border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50'>
       <div className='container mx-auto px-6 py-4'>
@@ -90,16 +111,18 @@ export function DashboardHeader() {
                 >
                   <Avatar className='w-8 h-8'>
                     <AvatarImage src='/diverse-user-avatars.png' />
-                    <AvatarFallback>JD</AvatarFallback>
+                    <AvatarFallback>{initials}</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className='w-56' align='end' forceMount>
                 <DropdownMenuLabel className='font-normal'>
                   <div className='flex flex-col space-y-1'>
-                    <p className='text-sm font-medium leading-none'>John Doe</p>
+                    <p className='text-sm font-medium leading-none'>
+                      {fullName}
+                    </p>
                     <p className='text-xs leading-none text-muted-foreground'>
-                      john.doe@example.com
+                      {emailId}
                     </p>
                   </div>
                 </DropdownMenuLabel>
@@ -121,7 +144,7 @@ export function DashboardHeader() {
                   <span>Support</span>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className='mr-2 h-4 w-4' />
                   <span>Log out</span>
                 </DropdownMenuItem>
