@@ -5,14 +5,13 @@ import { Bell, Search, Plus, Settings, Loader2 } from 'lucide-react';
 import { useSignout } from '@/hooks/auth/useAuth';
 
 // Import our separated components
-
 import mockAPI from '@/apis/portfolio/mockAPI';
 import PortfolioStatusModal from '../Portfolio/PortfolioStatusModal';
 import PortfolioTitleModal from '../Portfolio/PortfolioTitleModal';
-import PortfolioPreviewPage from '../Portfolio/PortfolioPreviewPage';
+
 import ErrorAlert from '../Portfolio/ErrorAlert';
 import UserDropdown from '../Portfolio/UserDropDown';
-
+import { ProjectViewerPage } from '@/Pages/ProjectViewerPage';
 
 export function DashboardHeader({ userData }) {
   const { mutate: signout } = useSignout();
@@ -21,7 +20,7 @@ export function DashboardHeader({ userData }) {
   const [showTitleModal, setShowTitleModal] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
-  const [currentPortfolioId, setCurrentPortfolioId] = useState(null);
+  const [currentProject, setCurrentProject] = useState(null); // Changed from portfolioId to project
   const [showPreview, setShowPreview] = useState(false);
   const [error, setError] = useState(null);
 
@@ -48,7 +47,10 @@ export function DashboardHeader({ userData }) {
         title: title || 'My Portfolio',
       });
 
-      setCurrentPortfolioId(response.portfolio_id);
+      setCurrentProject({
+        id: response.portfolio_id,
+        portfolioId: response.portfolio_id, // Keep for status modal compatibility
+      });
       setShowStatusModal(true);
     } catch (error) {
       console.error('Error creating portfolio:', error);
@@ -58,9 +60,40 @@ export function DashboardHeader({ userData }) {
     }
   };
 
-  const handleStatusComplete = (portfolioId) => {
+  const handleStatusComplete = async (portfolioId) => {
     setShowStatusModal(false);
-    setShowPreview(true);
+
+    try {
+      // Fetch the complete project data from the API
+      const projectData = await mockAPI.getPortfolio(portfolioId);
+
+      // Transform the API response to match ProjectViewerPage expected format
+      const project = {
+        id: portfolioId,
+        name: projectData.title || 'My Portfolio',
+        status: 'Published',
+        views: projectData.views || 0,
+        lastModified: new Date().toLocaleDateString(),
+        framework: projectData.framework || 'html', // Default to html if not specified
+        code:
+          projectData.code ||
+          projectData.html_content ||
+          '<h1>Hello World</h1>',
+        previewUrl:
+          projectData.preview_url ||
+          `data:text/html;base64,${btoa(
+            projectData.html_content || '<h1>Portfolio Preview</h1>'
+          )}`,
+        files: projectData.files || null, // Include files if it's a Next.js project
+        description: projectData.description || 'Generated portfolio',
+      };
+
+      setCurrentProject(project);
+      setShowPreview(true);
+    } catch (error) {
+      console.error('Error fetching project data:', error);
+      setError('Failed to load project preview. Please try again.');
+    }
   };
 
   const handleStatusError = () => {
@@ -75,16 +108,15 @@ export function DashboardHeader({ userData }) {
 
   const handleBackToDashboard = () => {
     setShowPreview(false);
-    setCurrentPortfolioId(null);
+    setCurrentProject(null);
   };
 
-  // If showing preview, render the preview page instead of header
-  if (showPreview && currentPortfolioId) {
+  // If showing preview, render the ProjectViewerPage instead of header
+  if (showPreview && currentProject) {
     return (
-      <PortfolioPreviewPage
-        portfolioId={currentPortfolioId}
+      <ProjectViewerPage
+        project={currentProject}
         onBack={handleBackToDashboard}
-        mockAPI={mockAPI}
       />
     );
   }
@@ -189,7 +221,7 @@ export function DashboardHeader({ userData }) {
       <PortfolioStatusModal
         isOpen={showStatusModal}
         onClose={() => setShowStatusModal(false)}
-        portfolioId={currentPortfolioId}
+        portfolioId={currentProject?.portfolioId}
         onComplete={handleStatusComplete}
         onError={handleStatusError}
         mockAPI={mockAPI}

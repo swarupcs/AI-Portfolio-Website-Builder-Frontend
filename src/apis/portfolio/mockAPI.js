@@ -5,7 +5,7 @@ const mockAPI = {
   },
 
   getPortfolioStatus: async (id) => {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1500));
     const statuses = ['generating', 'generating', 'generated'];
     const randomStatus = statuses[Math.floor(Math.random() * statuses.length)];
     return { status: randomStatus };

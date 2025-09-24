@@ -5,8 +5,7 @@ import LoginPage from "./Pages/LoginPAge";
 import SignUpPage from "./Pages/SignupPage";
 import CheckEmailPage from "./Pages/CheckEmail";
 import DashboardPage from "./Pages/DashboardPage";
-import BuilderPage from "./Pages/BuilderPage";
-import BuilderProjectPage from "./Pages/BuilderProjectPage";
+
 
 
 function AppRoutes() {
@@ -50,22 +49,6 @@ function AppRoutes() {
         element={
           // <ProtectedRoute>
             <DashboardPage />
-          // </ProtectedRoute>
-        }
-      />
-        <Route
-        path='/builder'
-        element={
-          // <ProtectedRoute>
-            <BuilderPage />
-          // </ProtectedRoute>
-        }
-      />
-        <Route
-        path='/builder/:projectId'
-        element={
-          // <ProtectedRoute>
-            <BuilderProjectPage />
           // </ProtectedRoute>
         }
       />
