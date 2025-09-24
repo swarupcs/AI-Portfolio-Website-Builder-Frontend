@@ -1,150 +1,129 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Sparkles, Plus, Settings, LogOut, User, Loader2 } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
-import { useSignout } from '@/hooks/auth/useAuth';
+import {
+  Bell,
+  Search,
+  Plus,
+  Settings,
+  User,
+  LogOut,
+  CreditCard,
+  HelpCircle,
+} from 'lucide-react';
 
-export function DashboardHeader({ user, profile }) {
-  const navigate = useNavigate();
-
-  // Get signout mutation with all states
-  const signoutMutation = useSignout();
-  const {
-    isPending: isSigningOut,
-    isError: signoutError,
-    error,
-  } = signoutMutation;
-
-  const handleSignOut = () => {
-    // Trigger the signout mutation
-    signoutMutation.mutate();
-  };
-
-  const handleProfileClick = () => {
-    navigate('/profile');
-  };
-
-  const handleSettingsClick = () => {
-    navigate('/settings');
-  };
-
-  const getInitials = (name) => {
-    return name
-      .split(' ')
-      .map((n) => n[0])
-      .join('')
-      .toUpperCase();
-  };
-
-    const getFullName = (firstName, lastName) => {
-      return `${firstName || ''} ${lastName || ''}`.trim() || 'User';
-    };
-
+export function DashboardHeader() {
   return (
-    <header className='border-b border-slate-800/50 backdrop-blur-sm'>
-      <div className='max-w-7xl mx-auto px-6 py-4'>
+    <header className='border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50'>
+      <div className='container mx-auto px-6 py-4'>
         <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-3'>
-            <Sparkles className='w-8 h-8 text-cyan-400' />
-            <h1 className='text-2xl font-bold bg-gradient-to-r from-cyan-400 to-green-400 bg-clip-text text-transparent'>
-              Portfolio AI
-            </h1>
+          <div className='flex items-center space-x-8'>
+            <div className='flex items-center space-x-3'>
+              <div className='w-8 h-8 bg-primary rounded-lg flex items-center justify-center'>
+                <span className='text-primary-foreground font-bold text-sm'>
+                  PB
+                </span>
+              </div>
+              <h1 className='text-xl font-semibold text-foreground'>
+                Portfolio Builder
+              </h1>
+            </div>
+            <nav className='hidden md:flex items-center space-x-6'>
+              <a
+                href='#'
+                className='text-foreground hover:text-primary transition-colors'
+              >
+                Dashboard
+              </a>
+              <a
+                href='#'
+                className='text-muted-foreground hover:text-primary transition-colors'
+              >
+                Projects
+              </a>
+              <a
+                href='#'
+                className='text-muted-foreground hover:text-primary transition-colors'
+              >
+                Templates
+              </a>
+              <a
+                href='#'
+                className='text-muted-foreground hover:text-primary transition-colors'
+              >
+                Analytics
+              </a>
+            </nav>
           </div>
 
-          <div className='flex items-center gap-4'>
-            {/* Show error message if signout fails */}
-            {signoutError && error && (
-              <div className='text-red-400 text-sm bg-red-500/10 px-3 py-1 rounded-md border border-red-500/20'>
-                {error.message}
-              </div>
-            )}
-
-            <Button
-              onClick={() => navigate('/builder')}
-              disabled={isSigningOut} // Disable during signout
-              className='bg-gradient-to-r from-cyan-500 to-green-500 hover:from-cyan-600 hover:to-green-600 text-white font-medium rounded-xl transition-all duration-200 flex items-center gap-2 disabled:opacity-50'
-            >
-              <Plus className='w-4 h-4' />
+          <div className='flex items-center space-x-4'>
+            <div className='relative hidden sm:block'>
+              <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4' />
+              <Input
+                placeholder='Search projects...'
+                className='pl-10 w-64 bg-secondary/50 border-border'
+              />
+            </div>
+            <Button size='sm' className='bg-primary hover:bg-primary/90'>
+              <Plus className='w-4 h-4 mr-2' />
               New Project
             </Button>
-
+            <Button variant='ghost' size='sm'>
+              <Bell className='w-4 h-4' />
+            </Button>
+            <Button variant='ghost' size='sm'>
+              <Settings className='w-4 h-4' />
+            </Button>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant='ghost'
-                  className='relative h-10 w-10 rounded-full disabled:opacity-50'
-                  disabled={isSigningOut} // Disable during signout
+                  className='relative h-8 w-8 rounded-full'
                 >
-                  <Avatar className='h-10 w-10 border-2 border-cyan-400/20'>
-                    <AvatarImage
-                      src={user?.photoUrl || '/placeholder.svg'}
-                      alt={getFullName(user?.firstName, user?.lastName)}
-                    />
-                    <AvatarFallback className='bg-slate-800 text-cyan-400'>
-                      {user?.firstName || user?.lastName
-                        ? getInitials(user.firstName, user.lastName)
-                        : user?.emailId
-                        ? user.emailId[0].toUpperCase()
-                        : 'U'}
-                    </AvatarFallback>
+                  <Avatar className='w-8 h-8'>
+                    <AvatarImage src='/diverse-user-avatars.png' />
+                    <AvatarFallback>JD</AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className='w-56 bg-slate-800/95 backdrop-blur-sm border-slate-700'
-                align='end'
-              >
-                <div className='flex items-center justify-start gap-2 p-2'>
-                  <div className='flex flex-col space-y-1 leading-none'>
-                    <p className='font-medium text-white'>
-                      {getFullName(user?.firstName, user?.lastName)}
-                    </p>
-                    <p className='w-[200px] truncate text-sm text-slate-400'>
-                      {user?.emailId || 'user@example.com'}
+              <DropdownMenuContent className='w-56' align='end' forceMount>
+                <DropdownMenuLabel className='font-normal'>
+                  <div className='flex flex-col space-y-1'>
+                    <p className='text-sm font-medium leading-none'>John Doe</p>
+                    <p className='text-xs leading-none text-muted-foreground'>
+                      john.doe@example.com
                     </p>
                   </div>
-                </div>
-                <DropdownMenuSeparator className='bg-slate-700' />
-                <DropdownMenuItem
-                  className='text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer disabled:opacity-50'
-                  onClick={handleProfileClick}
-                  disabled={isSigningOut}
-                >
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
                   <User className='mr-2 h-4 w-4' />
-                  Profile
+                  <span>Profile</span>
                 </DropdownMenuItem>
-                <DropdownMenuItem
-                  className='text-slate-200 focus:bg-slate-700 focus:text-white cursor-pointer disabled:opacity-50'
-                  onClick={handleSettingsClick}
-                  disabled={isSigningOut}
-                >
+                <DropdownMenuItem>
+                  <CreditCard className='mr-2 h-4 w-4' />
+                  <span>Billing</span>
+                </DropdownMenuItem>
+                <DropdownMenuItem>
                   <Settings className='mr-2 h-4 w-4' />
-                  Settings
+                  <span>Settings</span>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator className='bg-slate-700' />
-                <DropdownMenuItem
-                  className='text-red-400 focus:bg-red-500/10 focus:text-red-400 cursor-pointer disabled:opacity-50'
-                  onClick={handleSignOut}
-                  disabled={isSigningOut}
-                >
-                  {isSigningOut ? (
-                    <>
-                      <Loader2 className='mr-2 h-4 w-4 animate-spin' />
-                      Signing out...
-                    </>
-                  ) : (
-                    <>
-                      <LogOut className='mr-2 h-4 w-4' />
-                      Sign out
-                    </>
-                  )}
+                <DropdownMenuItem>
+                  <HelpCircle className='mr-2 h-4 w-4' />
+                  <span>Support</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <LogOut className='mr-2 h-4 w-4' />
+                  <span>Log out</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
